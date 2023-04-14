@@ -23,9 +23,111 @@ const { NotImplementedError } = require('../extensions/index.js');
  *  [1, 1, 1]
  * ]
  */
-function minesweeper(/* matrix */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+function minesweeper( matrix ) {
+
+  for ( let i = 0, k = 0; i < matrix.length; k++ ) {
+
+    let currentItem = matrix[ i ][ k ];
+
+    if ( currentItem === true ) {
+
+      matrix[ i ][ k ] = '0';
+
+    } else {
+
+      matrix[ i ][ k ] = 0;
+
+    }
+
+    if ( k >= matrix[ 0 ].length - 1 ) {
+
+      k = -1;
+      i++;
+
+    }
+
+  }
+
+  for ( let i = 0, k = 0; i < matrix.length; k++ ) {
+
+    let currentItem = matrix[ i ][ k ];
+
+    if ( typeof currentItem === 'string' ) {
+
+      const firstRow = i - 1 < 0 ? i : i - 1;
+      const firstColumn = k - 1 < 0 ? k : k - 1;
+      const lastRow = i + 1 === matrix.length ? i : i + 1;
+      const lastColumn = k + 1 === matrix[ 0 ].length ? k : k + 1;
+
+      let currentInnerItem = null;
+      let currentRow = firstRow;
+      let currentColumn = firstColumn;
+
+      while ( true ) {
+
+        if ( currentRow === i && currentColumn === k ) {
+
+          currentColumn++;
+          continue;
+
+        }
+
+        currentInnerItem = matrix[ currentRow ][ currentColumn ];
+
+        if ( typeof currentInnerItem === 'string' ) {
+
+          matrix[ currentRow ][ currentColumn ] = `${ +matrix[ currentRow ][ currentColumn ] + 1 }`;
+
+        } else {
+
+          matrix[ currentRow ][ currentColumn ]++;
+
+        }
+
+        if ( currentColumn === lastColumn && currentRow < lastRow ) {
+
+          currentColumn = firstColumn - 1;
+          currentRow++;
+
+        }
+
+        if ( currentRow >= lastRow && currentColumn === lastColumn ) {
+
+          break;
+
+        }
+
+        currentColumn++;
+
+      }
+
+    }
+
+    if ( k >= matrix[ 0 ].length - 1 ) {
+
+      k = -1;
+      i++;
+
+    }
+
+  }
+
+  for ( let i = 0, k = 0; i < matrix.length; k++ ) {
+
+    matrix[ i ][ k ] = +matrix[ i ][ k ];
+
+    if ( k >= matrix[ 0 ].length - 1 ) {
+
+      k = -1;
+      i++;
+
+    }
+
+  }
+
+
+  return matrix;
+
 }
 
 module.exports = {
